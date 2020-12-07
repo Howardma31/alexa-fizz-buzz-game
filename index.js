@@ -38,32 +38,16 @@ const NumberAnswerIntentHandler = {
     },
     handle(handlerInput) {
         let speakOutput = '';
-        let answer = handlerInput.requestEnvelope.request.intent.slots.number.value;
-        let correctAnswer = counter.toString();
-        if (counter % 15 === 0) {
-            correctAnswer = 'fizz buzz';
-        } else if (counter % 3 === 0) {
-            correctAnswer = 'fizz';
-        }
-        else if (counter % 5 === 0) {
-            correctAnswer = 'buzz';
-        }
+        let response = handlerInput.requestEnvelope.request.intent.slots.number.value;
+        let answer = getAnswer(counter);
 
-        if (correctAnswer !== answer) {
-            speakOutput = `I’m sorry, the correct response was ${correctAnswer},
+        if (answer !== response) {
+            speakOutput = `I’m sorry, the correct response was ${answer},
             you can play again or exit, what would you like to do?`;
         }
         else {
             counter++;
-            speakOutput = counter;
-            if (counter % 15 === 0) {
-                speakOutput = 'fizz buzz';
-            } else if (counter % 3 === 0) {
-                speakOutput = 'fizz';
-            }
-            else if (counter % 5 === 0) {
-                speakOutput = 'buzz';
-            }
+            speakOutput = getAnswer(counter);
         }
         counter++;
         return handlerInput.responseBuilder
@@ -81,31 +65,14 @@ const WordAnswerIntentHandler = {
     },
     handle(handlerInput) {
         let speakOutput ='';
-        let answer = handlerInput.requestEnvelope.request.intent.slots.keyword.value;
-        console.log(answer);
-        let correctAnswer = counter.toString();
-        if (counter % 15 === 0) {
-            correctAnswer = 'fizz buzz';
-        } else if (counter % 3 === 0) {
-            correctAnswer = 'fizz';
-        }
-        else if (counter % 5 === 0) {
-            correctAnswer = 'buzz';
-        }
-        if (`${correctAnswer}` == answer.toString()) {
+        let response = handlerInput.requestEnvelope.request.intent.slots.keyword.value;
+        let answer = getAnswer(counter);
+        if (`${answer}` == response.toString()) {
             counter++;
-            speakOutput = counter.toString();
-            if (counter % 15 === 0) {
-                speakOutput = 'fizz buzz';
-            } else if (counter % 3 === 0) {
-                speakOutput = 'fizz';
-            }
-            else if (counter % 5 === 0) {
-                speakOutput = 'buzz';
-            }
+            speakOutput = getAnswer(counter);
         }
         else {
-            speakOutput = `I’m sorry, the correct response was ${correctAnswer},
+            speakOutput = `I’m sorry, the correct response was ${answer},
             you can play again or exit, what would you like to do?`;
         }
         counter++;
@@ -242,6 +209,19 @@ const instructionMessage = ` We’ll each take turns counting up from one.
 const startGameMessage = `Ok, I'll start...One`;
 const exitSkillMessage = `Thanks for playing Fizz Buzz. For another great Alexa game, check out Song Quiz!`;
 
+/* HELPER FUNCTIONS */
+
+function getAnswer (counter) {
+    let answer = counter.toString();
+    if (counter % 15 === 0) {
+        answer = 'fizz buzz';
+    } else if (counter % 3 === 0) {
+        answer = 'fizz';
+    } else if (counter % 5 === 0) {
+        answer = 'buzz';
+    }
+    return answer;
+}
 /**
  * This handler acts as the entry point for your skill, routing all request and response
  * payloads to the handlers above. Make sure any new handlers or interceptors you've
