@@ -1,44 +1,45 @@
-/* *
- * This sample demonstrates handling intents from an Alexa skill using the Alexa Skills Kit SDK (v2).
- * Please visit https://alexa.design/cookbook for additional examples on implementing slots, dialog management,
- * session persistence, api calls, and more.
- * */
 const Alexa = require('ask-sdk-core');
-let counter = 2;
+let counter = 0;
+//let inGame = false;
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'LaunchRequest';
     },
     handle(handlerInput) {
-        const speakOutput = `Welcome to Fizz Buzz. We’ll each take turns counting up from one.
-        However, you must replace numbers divisible by 3 with the word “fizz” and you must replace 
-        numbers divisible by 5 with the word “buzz”. If a number is divisible by both 3 and 5, 
-        you should instead say “fizz buzz”. If you get one wrong, you lose. Ok, I'll start...One`;
 
         return handlerInput.responseBuilder
-            .speak(speakOutput)
+            .speak(welcomeMessage)
             .reprompt("I'm sorry, please say it again")
             .getResponse();
     }
 };
 
-const AnswerIntentHandler = {
+const GameIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AnswerIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GameIntent';
+    },
+    handle(handlerInput) {
+        //inGame = true;
+        counter = 2;
+        return handlerInput.responseBuilder
+            .speak(startGameMessage)
+            .reprompt("What would you like to do?")
+            .getResponse();
+    }
+};
+
+const NumberAnswerIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'NumberAnswerIntent';
+            //&& inGame === true;
     },
     handle(handlerInput) {
         let speakOutput = '';
-        let answer = '';
-        if (typeof handlerInput.requestEnvelope.request.intent.slots.keyword.value !== 'undefined') {
-            answer = handlerInput.requestEnvelope.request.intent.slots.keyword.value;
-        }
-        else {
-            answer = handlerInput.requestEnvelope.request.intent.slots.number.value;
-        }
-        
-        let correctAnswer = counter;
+        let answer = handlerInput.requestEnvelope.request.intent.slots.number.value;
+        let correctAnswer = counter.toString();
         if (counter % 15 === 0) {
             correctAnswer = 'fizz buzz';
         } else if (counter % 3 === 0) {
@@ -48,9 +49,9 @@ const AnswerIntentHandler = {
             correctAnswer = 'buzz';
         }
 
-        if (correctAnswer != answer) {
+        if (correctAnswer !== answer) {
             speakOutput = `I’m sorry, the correct response was ${correctAnswer},
-            would you like to play again?`;
+            you can play again or exit, what would you like to do?`;
         }
         else {
             counter++;
@@ -72,18 +73,59 @@ const AnswerIntentHandler = {
     }
 };
 
+const WordAnswerIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'WordAnswerIntent';
+            //&& inGame === true;
+    },
+    handle(handlerInput) {
+        let speakOutput ='';
+        let answer = handlerInput.requestEnvelope.request.intent.slots.keyword.value;
+        console.log(answer);
+        let correctAnswer = counter.toString();
+        if (counter % 15 === 0) {
+            correctAnswer = 'fizz buzz';
+        } else if (counter % 3 === 0) {
+            correctAnswer = 'fizz';
+        }
+        else if (counter % 5 === 0) {
+            correctAnswer = 'buzz';
+        }
+        if (`${correctAnswer}` == answer.toString()) {
+            counter++;
+            speakOutput = counter.toString();
+            if (counter % 15 === 0) {
+                speakOutput = 'fizz buzz';
+            } else if (counter % 3 === 0) {
+                speakOutput = 'fizz';
+            }
+            else if (counter % 5 === 0) {
+                speakOutput = 'buzz';
+            }
+        }
+        else {
+            speakOutput = `I’m sorry, the correct response was ${correctAnswer},
+            you can play again or exit, what would you like to do?`;
+        }
+        counter++;
+        return handlerInput.responseBuilder
+            .speak(speakOutput)
+            .reprompt(speakOutput)
+            .getResponse();
+    }
+};
+
 const EndGameIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'EndGameIntent';
     },
     handle(handlerInput) {
+        //inGame = false;
         counter = 2;
-        const speakOutput = `Thanks for playing Fizz Buzz. 
-        For another great Alexa game, check out Song Quiz!`;
-
         return handlerInput.responseBuilder
-            .speak(speakOutput)
+            .speak(exitSkillMessage)
             .getResponse();
     }
 };
@@ -110,10 +152,10 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        const speakOutput = 'Goodbye!';
-
+        //inGame = false;
+        counter = 2;
         return handlerInput.responseBuilder
-            .speak(speakOutput)
+            .speak(exitSkillMessage)
             .getResponse();
     }
 };
@@ -182,13 +224,23 @@ const ErrorHandler = {
     handle(handlerInput, error) {
         const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
-
+        console.log(error);
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
             .getResponse();
     }
 };
+
+/* CONSTANTS */
+const welcomeMessage = `Welcome to Fizz Buzz. You can ask me to start a game or to
+read the instructions, What would you like to do?`;
+const instructionMessage = ` We’ll each take turns counting up from one.
+        However, you must replace numbers divisible by 3 with the word “fizz” and you must replace 
+        numbers divisible by 5 with the word “buzz”. If a number is divisible by both 3 and 5, 
+        you should instead say “fizz buzz”. If you get one wrong, you lose.`
+const startGameMessage = `Ok, I'll start...One`;
+const exitSkillMessage = `Thanks for playing Fizz Buzz. For another great Alexa game, check out Song Quiz!`;
 
 /**
  * This handler acts as the entry point for your skill, routing all request and response
@@ -198,7 +250,9 @@ const ErrorHandler = {
 exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
-        AnswerIntentHandler,
+        GameIntentHandler,
+        NumberAnswerIntentHandler,
+        WordAnswerIntentHandler,
         EndGameIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
