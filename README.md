@@ -9,6 +9,7 @@ Simple Alexa game created using JavaScript and Node.js in the Alexa Developer Co
 * [Setup](#setup)
 * [Features](#features)
 * [Design Choice](#design-choice)
+* [Bonus](#bonus)
 
 ## General info
 This project is a classic port of the "fizz buzz" game to the Alexa environment.
@@ -37,3 +38,6 @@ Project is created with:
 * Skill Invocation Name is volley fizz buzz instead of fizz buzz. This is due to a built-in fizz buzz game causing confusion to the test console.
 * EndGameIntent was ultimately not implemented since CancelIntent & StopIntent have similar functions.
 * AMAZON.NavigateHomeIntent not implemented because getting the answer wrong yields the similar result.
+
+## Bonus
+* Try saying "Volley, volley, volley" in the game!
