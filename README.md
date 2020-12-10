@@ -27,7 +27,6 @@ Project is created with:
 * Starts a "fizz buzz" game.
 * Provides rules to "fizz buzz".
 * Provides a list of commands.
-* Navigates to home.
 * Repeats the last statement.
 * Stops the game.
 
@@ -36,3 +35,4 @@ Project is created with:
 * Alexa will respond differently to the same utterances depending on whether in game or not.
 * Skill Invocation Name is volley fizz buzz instead of fizz buzz. This is due to a built-in fizz buzz game causing confusion to the test console.
 * EndGameIntent was ultimately not implemented since CancelIntent & StopIntent have similar functions.
+* AMAZON.NavigateHomeIntent not implemented because getting the answer wrong yields the similar result.
