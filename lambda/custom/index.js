@@ -142,7 +142,10 @@ const FallbackIntentHandler = {
                     || Alexa.getIntentName(handlerInput.requestEnvelope) === 'GameIntent'
                         || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent'
                             || Alexa.getIntentName(handlerInput.requestEnvelope) === 'EasterEggIntent')
-                && inGame === true);
+                && inGame === true)
+                    || ((Alexa.getIntentName(handlerInput.requestEnvelope) === 'NumberAnswerIntent')
+                        || Alexa.getIntentName(handlerInput.requestEnvelope) === 'WordAnswerIntent'
+                    && inGame === false);
     },
     handle(handlerInput) {
         let speakOutput, repromptOutput;
