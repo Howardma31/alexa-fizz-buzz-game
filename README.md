@@ -24,9 +24,11 @@ Project is created with:
 * Set up the necessary intents shown in models/intents.json.
 
 ## Features
-* Starts a "fizz buzz" game
-* Provides rules to "fizz buzz"
-* Ends the game
+* Starts a "fizz buzz" game.
+* Provides rules to "fizz buzz".
+* Provides a list of commands.
+* Repeats the last statement.
+* Stops the game.
 
 ## Design Choice
 * While in a game, any response other than the correct answer would lose the game to reflect the real world, including asking for instruction, similarly, no pause game function is implemented.
