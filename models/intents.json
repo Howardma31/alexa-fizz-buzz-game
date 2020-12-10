@@ -25,10 +25,10 @@
         {
           "name": "AMAZON.StartGameIntent",
           "samples": [
-            "replay {gameWord}",
+            "replay",
             "relaunch {gameWord}",
             "play {gameWord}",
-            "play again {gameWord}",
+            "play again",
             "launch {gameWord}",
             "start over {gameWord}",
             "restart {gameWord}",
