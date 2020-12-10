@@ -7,6 +7,7 @@ Simple Alexa game created using JavaScript and Node.js in the Alexa Developer Co
 * [General info](#general-info)
 * [Technologies](#technologies)
 * [Setup](#setup)
+* [Features](#features)
 * [Design Choice](#design-choice)
 
 ## General info
@@ -21,6 +22,11 @@ Project is created with:
 ## Setup
 * Open Alexa Developer Console and paste index.js into the corresponding file, other files were unchanged.
 * Set up the necessary intents shown in models/intents.json.
+
+## Features
+* Starts a "fizz buzz" game
+* Provides rules to "fizz buzz"
+* Ends the game
 
 ## Design Choice
 * While in a game, any response other than the correct answer would lose the game to reflect the real world, including asking for instruction, similarly, no pause game function is implemented.
