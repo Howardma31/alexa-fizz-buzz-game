@@ -54,17 +54,16 @@ const NumberAnswerIntentHandler = {
             && inGame === true;
     },
     handle(handlerInput) {
-        let speakOutput = '';
         if (getAnswer(counter) !== handlerInput.requestEnvelope.request.intent.slots.number.value) {
-            lastStatement = speakOutput = getBadAnswer(counter);
+            lastStatement = getBadAnswer(counter);
         }
         else {
-            lastStatement = speakOutput = getAnswer(++counter);
+            lastStatement = getAnswer(++counter);
         }
         counter++;
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
+            .speak(lastStatement)
+            .reprompt(lastStatement)
             .getResponse();
     }
 };
@@ -76,17 +75,16 @@ const WordAnswerIntentHandler = {
             && inGame === true;
     },
     handle(handlerInput) {
-        let speakOutput ='';
         if (getAnswer(counter) === handlerInput.requestEnvelope.request.intent.slots.keyword.value.toString()) {
-            lastStatement = speakOutput = getAnswer(++counter);
+            lastStatement = getAnswer(++counter);
         }
         else {
-            lastStatement = speakOutput = getBadAnswer(counter);
+            lastStatement = getBadAnswer(counter);
         }
         counter++;
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
+            .speak(lastStatement)
+            .reprompt(lastStatement)
             .getResponse();
     }
 };
@@ -97,7 +95,6 @@ const RepeatIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.RepeatIntent';
     },
     handle(handlerInput) {
-
         return handlerInput.responseBuilder
             .speak(lastStatement)
             .reprompt(repromptMessage)
@@ -126,7 +123,6 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-
         return handlerInput.responseBuilder
             .speak(exitSkillMessage)
             .getResponse();
@@ -195,7 +191,6 @@ const IntentReflectorHandler = {
         const speakOutput = `You just triggered ${intentName}`;
         return handlerInput.responseBuilder
             .speak(speakOutput)
-            //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
             .getResponse();
     }
 };
@@ -230,7 +225,7 @@ const EasterEggIntentHandler = {
     handle(handlerInput) {
         lastStatement = `Thank you for reading the whole read me! or you are also really 
         excited about volley, no matter which one is it, here's an easter egg for you!
-        clap, clap, clap.`;
+        clap, clap, clap.` + repromptMessage;
         return handlerInput.responseBuilder
             .speak(lastStatement)
             .reprompt(repromptMessage)
@@ -239,6 +234,7 @@ const EasterEggIntentHandler = {
 };
 
 /* CONSTANTS */
+
 const welcomeMessage = `Welcome to Fizz Buzz. You can ask me to start a game or to
 read the instructions, What would you like to do?`;
 const repromptMessage = `You can ask me to start a game or to
