@@ -144,7 +144,8 @@ const FallbackIntentHandler = {
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.FallbackIntent'
                 || ((Alexa.getIntentName(handlerInput.requestEnvelope) === 'InstructionIntent'
                     || Alexa.getIntentName(handlerInput.requestEnvelope) === 'GameIntent'
-                        || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent')
+                        || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent'
+                            || Alexa.getIntentName(handlerInput.requestEnvelope) === 'EasterEggIntent')
                 && inGame === true);
     },
     handle(handlerInput) {
@@ -192,7 +193,6 @@ const IntentReflectorHandler = {
     handle(handlerInput) {
         const intentName = Alexa.getIntentName(handlerInput.requestEnvelope);
         const speakOutput = `You just triggered ${intentName}`;
-
         return handlerInput.responseBuilder
             .speak(speakOutput)
             //.reprompt('add a reprompt if you want to keep the session open for the user to respond')
@@ -211,11 +211,29 @@ const ErrorHandler = {
     },
     handle(handlerInput, error) {
         const speakOutput = 'Sorry, I had trouble doing what you asked. Please try again.';
+        lastStatement = speakOutput;
         console.log(`~~~~ Error handled: ${JSON.stringify(error)}`);
         console.log(error);
         return handlerInput.responseBuilder
             .speak(speakOutput)
             .reprompt(speakOutput)
+            .getResponse();
+    }
+};
+
+const EasterEggIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'EasterEggIntent'
+            && inGame === false;
+    },
+    handle(handlerInput) {
+        lastStatement = `Thank you for reading the whole read me! or you are also really 
+        excited about volley, no matter which one is it, here's an easter egg for you!
+        clap, clap, clap.`;
+        return handlerInput.responseBuilder
+            .speak(lastStatement)
+            .reprompt(repromptMessage)
             .getResponse();
     }
 };
@@ -250,8 +268,8 @@ function getAnswer(counter) {
 // Returns a end game statement and the correct answer when the user responds incorrectly
 function getBadAnswer(counter) {
     inGame = false;
-    return `I’m sorry, the correct response was ${getAnswer(counter)},
-    you can play again or exit, what would you like to do?`;
+    return `I’m sorry, the correct response was ${getAnswer(counter)}, You lose! Better luck next time!
+    You can play again or exit, what would you like to do?`;
 }
 
 /**
@@ -271,7 +289,8 @@ exports.handler = Alexa.SkillBuilders.custom()
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
         SessionEndedRequestHandler,
-        IntentReflectorHandler)
+        IntentReflectorHandler,
+        EasterEggIntentHandler)
     .addErrorHandlers(
         ErrorHandler)
     .withCustomUserAgent('sample/hello-world/v1.2')
