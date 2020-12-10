@@ -1,5 +1,5 @@
 const Alexa = require('ask-sdk-core');
-let counter, inGame;
+let counter, inGame, lastStatement;
 
 const LaunchRequestHandler = {
     canHandle(handlerInput) {
@@ -7,9 +7,10 @@ const LaunchRequestHandler = {
     },
     handle(handlerInput) {
         inGame = false;
+        lastStatement = welcomeMessage;
         return handlerInput.responseBuilder
             .speak(welcomeMessage)
-            .reprompt("I'm sorry, please say it again")
+            .reprompt(repromptMessage)
             .getResponse();
     }
 };
@@ -21,10 +22,10 @@ const InstructionIntentHandler = {
             && inGame === false;
     },
     handle(handlerInput) {
-        
+        lastStatement = instructionMessage;
         return handlerInput.responseBuilder
             .speak(instructionMessage)
-            .reprompt(instructionMessage)
+            .reprompt(repromptMessage)
             .getResponse();
     }
 };
@@ -38,6 +39,7 @@ const GameIntentHandler = {
     handle(handlerInput) {
         inGame = true;
         counter = 2;
+        lastStatement = startGameMessage;
         return handlerInput.responseBuilder
             .speak(startGameMessage)
             .reprompt('I go first, One')
@@ -53,15 +55,11 @@ const NumberAnswerIntentHandler = {
     },
     handle(handlerInput) {
         let speakOutput = '';
-        let response = handlerInput.requestEnvelope.request.intent.slots.number.value;
-        let answer = getAnswer(counter);
-
-        if (answer !== response) {
-            speakOutput = getBadAnswer(counter);
+        if (getAnswer(counter) !== handlerInput.requestEnvelope.request.intent.slots.number.value) {
+            lastStatement = speakOutput = getBadAnswer(counter);
         }
         else {
-            counter++;
-            speakOutput = getAnswer(counter);
+            lastStatement = speakOutput = getAnswer(++counter);
         }
         counter++;
         return handlerInput.responseBuilder
@@ -79,14 +77,11 @@ const WordAnswerIntentHandler = {
     },
     handle(handlerInput) {
         let speakOutput ='';
-        let response = handlerInput.requestEnvelope.request.intent.slots.keyword.value;
-        let answer = getAnswer(counter);
-        if (answer === response.toString()) {
-            counter++;
-            speakOutput = getAnswer(counter);
+        if (getAnswer(counter) === handlerInput.requestEnvelope.request.intent.slots.keyword.value.toString()) {
+            lastStatement = speakOutput = getAnswer(++counter);
         }
         else {
-            speakOutput = getBadAnswer(counter);
+            lastStatement = speakOutput = getBadAnswer(counter);
         }
         counter++;
         return handlerInput.responseBuilder
@@ -110,17 +105,30 @@ const EndGameIntentHandler = {
     }
 };
 
+const RepeatIntentHandler = {
+    canHandle(handlerInput) {
+        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.RepeatIntent';
+    },
+    handle(handlerInput) {
+
+        return handlerInput.responseBuilder
+            .speak(lastStatement)
+            .reprompt(repromptMessage)
+            .getResponse();
+    }
+};
+
 const HelpIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
             && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent';
     },
     handle(handlerInput) {
-        const speakOutput = 'You can say hello to me! How can I help?';
-
+        lastStatement = repromptMessage;
         return handlerInput.responseBuilder
-            .speak(speakOutput)
-            .reprompt(speakOutput)
+            .speak(repromptMessage)
+            .reprompt(repromptMessage)
             .getResponse();
     }
 };
@@ -132,8 +140,8 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        inGame = false;
-        counter = 2;
+        //inGame = false;
+        //counter = 2;
         return handlerInput.responseBuilder
             .speak(exitSkillMessage)
             .getResponse();
@@ -147,7 +155,11 @@ const CancelAndStopIntentHandler = {
 const FallbackIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.FallbackIntent';
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.FallbackIntent'
+                || ((Alexa.getIntentName(handlerInput.requestEnvelope) === 'InstructionIntent'
+                    || Alexa.getIntentName(handlerInput.requestEnvelope) === 'GameIntent'
+                        || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.HelpIntent')
+                && inGame === true);
     },
     handle(handlerInput) {
         let speakOutput, repromptOutput;
@@ -157,8 +169,7 @@ const FallbackIntentHandler = {
         } else {
             speakOutput = `Sorry, I don't know about that. You can ask me to start a game or to
             read the instructions, What would you like to do?`;
-            repromptOutput = `You can ask me to start a game or to
-            read the instructions, What would you like to do?`
+            repromptOutput = repromptMessage;
         }
         return handlerInput.responseBuilder
             .speak(speakOutput)
@@ -223,31 +234,36 @@ const ErrorHandler = {
 /* CONSTANTS */
 const welcomeMessage = `Welcome to Fizz Buzz. You can ask me to start a game or to
 read the instructions, What would you like to do?`;
+const repromptMessage = `You can ask me to start a game or to
+            read the instructions, What would you like to do?`;
 const instructionMessage = `We’ll each take turns counting up from one.
         However, you must replace numbers divisible by 3 with the word “fizz” and you must replace 
         numbers divisible by 5 with the word “buzz”. If a number is divisible by both 3 and 5, 
-        you should instead say “fizz buzz”. If you get one wrong, you lose. What would you like to do?`
+        you should instead say “fizz buzz”. If you get one wrong, you lose. What would you like to do?`;
 const startGameMessage = `Ok, I'll start...One`;
 const exitSkillMessage = `Thanks for playing Fizz Buzz. For another great Alexa game, check out Song Quiz!`;
 
 /* HELPER FUNCTIONS */
 
+// Returns the correct answer based on the current counter
 function getAnswer(counter) {
-    let answer = counter.toString();
     if (counter % 15 === 0) {
-        answer = 'fizz buzz';
+        return 'fizz buzz';
     } else if (counter % 3 === 0) {
-        answer = 'fizz';
+        return 'fizz';
     } else if (counter % 5 === 0) {
-        answer = 'buzz';
+        return 'buzz';
+    } else {
+        return counter.toString();  
     }
-    return answer;
 }
 
+// Returns a end game statement and the correct answer when the user responds incorrectly
 function getBadAnswer(counter) {
     return `I’m sorry, the correct response was ${getAnswer(counter)},
     you can play again or exit, what would you like to do?`;
 }
+
 /**
  * This handler acts as the entry point for your skill, routing all request and response
  * payloads to the handlers above. Make sure any new handlers or interceptors you've
@@ -261,6 +277,7 @@ exports.handler = Alexa.SkillBuilders.custom()
         NumberAnswerIntentHandler,
         WordAnswerIntentHandler,
         EndGameIntentHandler,
+        RepeatIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
         FallbackIntentHandler,
