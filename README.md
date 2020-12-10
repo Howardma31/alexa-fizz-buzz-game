@@ -31,6 +31,7 @@ Project is created with:
 * Stops the game.
 
 ## Design Choice
+* The instructions are not automatically provided in the beginning since many people know the rules already and might be annoying.
 * While in a game, any response other than the correct answer would lose the game to reflect the real world, including asking for instruction, similarly, no pause game function is implemented.
 * Alexa will respond differently to the same utterances depending on whether in game or not.
 * Skill Invocation Name is volley fizz buzz instead of fizz buzz. This is due to a built-in fizz buzz game causing confusion to the test console.
