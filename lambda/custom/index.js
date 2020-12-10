@@ -30,10 +30,10 @@ const InstructionIntentHandler = {
     }
 };
 
-const GameIntentHandler = {
+const StartGameIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'GameIntent'
+            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'StartGameIntent'
             && inGame === false;
     },
     handle(handlerInput) {
@@ -126,13 +126,13 @@ const CancelAndStopIntentHandler = {
                 || Alexa.getIntentName(handlerInput.requestEnvelope) === 'AMAZON.StopIntent');
     },
     handle(handlerInput) {
-        //inGame = false;
-        //counter = 2;
+
         return handlerInput.responseBuilder
             .speak(exitSkillMessage)
             .getResponse();
     }
 };
+
 /* *
  * FallbackIntent triggers when a customer says something that doesn’t map to any intents in your skill
  * It must also be defined in the language model (if the locale supports it)
@@ -163,6 +163,7 @@ const FallbackIntentHandler = {
             .getResponse();
     }
 };
+
 /* *
  * SessionEndedRequest notifies that a session was ended. This handler will be triggered when a currently open 
  * session is closed for one of the following reasons: 1) The user says "exit" or "quit". 2) The user does not 
@@ -178,6 +179,7 @@ const SessionEndedRequestHandler = {
         return handlerInput.responseBuilder.getResponse(); // notice we send an empty response
     }
 };
+
 /* *
  * The intent reflector is used for interaction model testing and debugging.
  * It will simply repeat the intent the user said. You can create custom handlers for your intents 
@@ -197,6 +199,7 @@ const IntentReflectorHandler = {
             .getResponse();
     }
 };
+
 /**
  * Generic error handling to capture any syntax or routing errors. If you receive an error
  * stating the request handler chain is not found, you have not implemented a handler for
@@ -246,6 +249,7 @@ function getAnswer(counter) {
 
 // Returns a end game statement and the correct answer when the user responds incorrectly
 function getBadAnswer(counter) {
+    inGame = false;
     return `I’m sorry, the correct response was ${getAnswer(counter)},
     you can play again or exit, what would you like to do?`;
 }
@@ -259,7 +263,7 @@ exports.handler = Alexa.SkillBuilders.custom()
     .addRequestHandlers(
         LaunchRequestHandler,
         InstructionIntentHandler,
-        GameIntentHandler,
+        StartGameIntentHandler,
         NumberAnswerIntentHandler,
         WordAnswerIntentHandler,
         RepeatIntentHandler,
