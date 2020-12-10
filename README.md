@@ -40,4 +40,4 @@ Project is created with:
 * AMAZON.NavigateHomeIntent not implemented because getting the answer wrong yields the similar result.
 
 ## Bonus
-* Try saying "Volley, volley, volley" in the game!
+* Try saying "Volley, volley, volley"!
