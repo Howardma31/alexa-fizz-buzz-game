@@ -1,1 +1,198 @@
-
+  
+{
+  "interactionModel": {
+    "languageModel": {
+      "invocationName": "volley fizz buzz",
+      "intents": [
+        {
+          "name": "AMAZON.CancelIntent",
+          "samples": [
+            "cancel"
+          ]
+        },
+        {
+          "name": "AMAZON.HelpIntent",
+          "samples": [
+            "help",
+            "help me",
+            "get help",
+            "can you help me"
+          ]
+        },
+        {
+          "name": "AMAZON.FallbackIntent",
+          "samples": []
+        },
+        {
+          "name": "AMAZON.StartGameIntent",
+          "samples": [
+            "replay {gameWord}",
+            "relaunch {gameWord}",
+            "play {gameWord}",
+            "play again {gameWord}",
+            "launch {gameWord}",
+            "start over {gameWord}",
+            "restart {gameWord}",
+            "open {gameWord}",
+            "begin {gameWord}",
+            "start {gameWord}",
+          ]
+        },
+        {
+          "name": "AMAZON.StopIntent",
+          "samples": [
+            "stop"
+          ]
+        },
+        {
+          "name": "AMAZON.NavigateHomeIntent",
+          "samples": [
+            "navigate home"
+          ]
+        },
+        {
+          "name": "AMAZON.RepeatIntent",
+          "samples": [
+            "What was that again",
+            "I didn't get that",
+            "say that again",
+            "repeat that",
+            "What's that",
+            "repeat",
+          ],
+          "slots": []
+        },
+        {
+          "name": "WordAnswerIntent",
+          "samples": [
+            "{keyword}",
+          ],
+          "slots": [
+            {
+              "name": "keyword",
+              "type": "FizzBuzzKeywords",
+              "samples": []
+            }
+          ]
+        },
+        {
+          "name": "NumberAnswerIntent",
+          "samples": [
+            "{number}",
+          ],
+          "slots": [
+            {
+              "name": "number",
+              "type": "AMAZON.NUMBER",
+              "samples": []
+            }
+          ]
+        },
+        {
+          "name": "InstructionIntent",
+          "samples": [
+            "{ruleWord}",
+            "{gameWord} {ruleWord}",
+            "{ruleWord} {gameWord}",
+            "How to play {gameWord}",
+            "How do you play {gameWord}"
+          ],
+          "slots": [
+            {
+              "name": "ruleWord",
+              "type": "RuleKeywords",
+              "samples": []
+            },
+            {
+              "name": "gameWord",
+              "type": "GameWords",
+              "samples": []
+            } 
+          ]
+        }
+      ],
+      "types": [
+        {
+          "name": "FizzBuzzKeywords",
+          "values": [
+            {
+              "name": {
+                "value": "fizz buzz"
+              }
+            },
+            {
+              "name": {
+                "value": "fizz"
+              }
+            },
+            {
+              "name": {
+                "value": "buzz"
+              }
+            }
+          ]
+        },
+        {
+          "name": "GameWords",
+          "values": [
+            {
+              "name": {
+                "value": "this game"
+              }
+            },
+            {
+              "name": {
+                "value": "game"
+              }
+            },
+            {
+              "name": {
+                "value": "games"
+              }
+            },
+            {
+              "name": {
+                "value": "fizz buzz game"
+              }
+            },
+            {
+              "name": {
+                "value": "fizz buzz"
+              }
+            },
+            {
+              "name": {
+                "value": "the game"
+              }
+            }
+          ]
+        },
+        {
+          "name": "RuleKeywords",
+          "values": [
+            {
+              "name": {
+                "value": "Instruction"
+              }
+            },
+            {
+              "name": {
+                "value": "Rules"
+              }
+            },
+            {
+              "name": {
+                "value": "Rule"
+              }
+            },
+            {
+              "name": {
+                "value": "Instructions"
+              }
+            }
+          ]
+        }
+      ]
+    }
+  }
+}
