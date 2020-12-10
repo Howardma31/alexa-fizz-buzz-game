@@ -18,8 +18,8 @@ Project is created with:
 * Alexa Developer Console
 
 ## Setup
-To run this project, open Alexa Developer Console and paste index.js into the corresponding file, other files were unchanged.
-Set up the necessary intents shown in models/intents.json.
+* open Alexa Developer Console and paste index.js into the corresponding file, other files were unchanged.
+* Set up the necessary intents shown in models/intents.json.
 
 ## Design Choice
 * While in a game, any response other than the correct answer would lose the game to reflect the real world, including asking for instruction, similarly, no pause game function is implemented.
