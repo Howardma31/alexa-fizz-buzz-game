@@ -1,4 +1,4 @@
-# Alexa Fizz Buzz Game
+# Alexa "Fizz Buzz" Game
 ![](ReadMeBanner.png)
 
 Simple Alexa game created using JavaScript and Node.js in the Alexa Developer Console
@@ -10,7 +10,7 @@ Simple Alexa game created using JavaScript and Node.js in the Alexa Developer Co
 * [Design Choice](#design-choice)
 
 ## General info
-This project is a classic port of the fizz buzz game to the Alexa environment.
+This project is a classic port of the "fizz buzz" game to the Alexa environment.
 
 ## Technologies
 Project is created with:
