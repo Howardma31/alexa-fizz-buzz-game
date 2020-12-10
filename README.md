@@ -31,7 +31,7 @@ Project is created with:
 * Stops the game.
 
 ## Design Choice
-* While in a game, any response other than the correct answer would lose the game to reflect the real world, including asking for instruction, similarly, no pause game function is implemented.
+* While in a game, any response other than the correct answer would lose the game to reflect the real world, including asking for instruction or for repeating a statement, similarly, no pause game function is implemented.
 * Alexa will respond differently to the same utterances depending on whether in game or not.
 * Skill Invocation Name is volley fizz buzz instead of fizz buzz. This is due to a built-in fizz buzz game causing confusion to the test console.
 * EndGameIntent was ultimately not implemented since CancelIntent & StopIntent have similar functions.
