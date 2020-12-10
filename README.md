@@ -1,5 +1,5 @@
 # Alexa "Fizz Buzz" Game
-![](ReadMeBanner.png)
+![](images/ReadMeBanner.png)
 
 Simple Alexa game created using JavaScript and Node.js in the Alexa Developer Console
 
