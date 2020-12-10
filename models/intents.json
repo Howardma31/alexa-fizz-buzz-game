@@ -109,6 +109,12 @@
               "samples": []
             } 
           ]
+        },
+        {
+          "name": "EasterEggIntent",
+          "samples": [
+            "volley, volley, volley"
+          ]
         }
       ],
       "types": [
