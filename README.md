@@ -27,6 +27,7 @@ Project is created with:
 * Starts a "fizz buzz" game.
 * Provides rules to "fizz buzz".
 * Provides a list of commands.
+* Navigates to home.
 * Repeats the last statement.
 * Stops the game.
 
