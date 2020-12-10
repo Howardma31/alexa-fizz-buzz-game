@@ -91,20 +91,6 @@ const WordAnswerIntentHandler = {
     }
 };
 
-const EndGameIntentHandler = {
-    canHandle(handlerInput) {
-        return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
-            && Alexa.getIntentName(handlerInput.requestEnvelope) === 'EndGameIntent';
-    },
-    handle(handlerInput) {
-        inGame = false;
-        counter = 2;
-        return handlerInput.responseBuilder
-            .speak(exitSkillMessage)
-            .getResponse();
-    }
-};
-
 const RepeatIntentHandler = {
     canHandle(handlerInput) {
         return Alexa.getRequestType(handlerInput.requestEnvelope) === 'IntentRequest'
@@ -276,7 +262,6 @@ exports.handler = Alexa.SkillBuilders.custom()
         GameIntentHandler,
         NumberAnswerIntentHandler,
         WordAnswerIntentHandler,
-        EndGameIntentHandler,
         RepeatIntentHandler,
         HelpIntentHandler,
         CancelAndStopIntentHandler,
